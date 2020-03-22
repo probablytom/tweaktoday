@@ -11,6 +11,7 @@
  * Minor modifications by Tom Wallis
  * March 2020
  * - Included Jost* default font, made by Indestructible Type
+ * - Changed background colour
  */
 
 
@@ -131,7 +132,9 @@ body {
   line-height: 1.6;
   font-weight: 400;
   font-family: "Jost", "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #222; }
+  color: #222;
+  background-color: #fffff8;
+  }
 
 
 /* Typography

@@ -1,14 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import *
 
 # Create your views here.
-def index(_request):
+def index(request):
     '''
     Shows today's tweak and the relevant submissions for it
     :param _request: The django http request
     :return: Rendered index template containing today's tweak and its submissions
     '''
-    return HttpResponse('You are at the index of TweakToday.')
+    challenge = Tweak.objects.all()[0]
+    submissions = list(challenge.submission_set.all().iterator())
+    return render(request, 'tt_core/index.html', context={'challenge': challenge, 'submissions':submissions})
 
 def voteon(request, suggestion_id):
     '''
@@ -50,7 +53,8 @@ def suggestions(request):
     :param request: The django http request
     :return: A rendered suggestions template
     '''
-    return HttpResponse('suggetsions')
+    suggs = TaskSuggestion.objects.all()
+    return render(request, 'tt_core/suggestions.html', {'suggs': suggs})
 
 def post_submission(request):
     '''
@@ -67,3 +71,6 @@ def register_user(request):
     :return:
     '''
     raise NotImplemented()
+
+def suggest_new_task(request):
+    return HttpResponse('in suggest new task')

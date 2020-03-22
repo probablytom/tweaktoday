@@ -1,0 +1,23 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+<p>Welcome to TweakToday!</p>
+
+<p>Today's challenge: <i>{{ challenge.task_text }}</i>.</p>
+
+{% if challenge.task_explainer != "" %}
+<p>Some extra information was submitted with this challenge: <i>{{ challenge.task_explainer }}</i></p>
+{% endif %}
+
+{% for sub in submissions %}
+    <div class="row">
+        <div class="eleven columns">{{ sub.submitted_by.username }}{% if sub.tweak_url %} submitted something <a href="{{ sub.tweak_url }}">here.</a>{% else %} submitted some text.{% endif %}</div>
+        <div class="two-thirds column"<p>They said: <i>{{ sub.submission_explainer }}</i></p></div>
+    </div>
+{% empty %}
+    <div class="row">
+        <p>There are no submissions yet...you should get in there first!</p>
+    </div>
+{% endfor %}
+
+{% endblock %}

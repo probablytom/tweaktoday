@@ -1,0 +1,19 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="eleven columns">
+        <p><a href="{% url 'tt_core:suggest_new_task' %}">Suggest a new task here!</a></p>
+    </div>
+</div>
+
+{% for suggestion in suggs %}
+    <div class="row">
+        <div class="nine columns">{{ suggestion.task_text }}</div><div class="two columns">vote button</div>
+        {% if suggestion.task_explainer %}<div class="eleven columns"><i>{{ suggestion.task_explainer }}</i></div>{% endif %}
+    </div>
+    <br>
+{% empty %}
+There are no suggested tweaks right now!
+{% endfor %}
+{% endblock%}
