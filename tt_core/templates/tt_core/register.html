@@ -1,0 +1,19 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+<h3>Register new user</h3>
+
+<p>Input your details below to register!</p>
+
+{% if error %}
+<p><strong>{{ error }}</strong></p>
+{% endif %}
+{{ form.errors }}
+{{ form.non_field_errors }}
+<form action="{% url 'tt_core:register_new_user' %}" method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="register"/>
+</form>
+{% endblock %}

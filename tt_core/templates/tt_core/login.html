@@ -1,0 +1,14 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+<h3>Login</h3>
+
+<p>Input your registered username and password below to log in.</p>
+
+<form action="{% url 'tt_core:login' %}" method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Log In"/>
+</form>
+{% endblock %}

@@ -1,6 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def index(request):
@@ -13,6 +18,7 @@ def index(request):
     submissions = list(challenge.submission_set.all().iterator())
     return render(request, 'tt_core/index.html', context={'challenge': challenge, 'submissions':submissions})
 
+@login_required
 def voteon(request, suggestion_id):
     '''
     Allows a logged in user to vote on a suggestion
@@ -20,6 +26,10 @@ def voteon(request, suggestion_id):
     :param suggestion_id: The id of the suggestion being voted on
     :return: redirect to vote_recieved
     '''
+    suggestion = TaskSuggestion.objects.get(pk=suggestion_id)
+    # Get logged in user
+    # Add user to suggestion many-to-many
+    # Render an appropriate template and return it
     return HttpResponse('voteon')
 
 def vote_recieved(request):
@@ -65,12 +75,51 @@ def post_submission(request):
     return HttpResponse('post_submission')
 
 def register_user(request):
-    '''
-    Register a new user
-    :param request:
-    :return:
-    '''
-    raise NotImplemented()
+    if request.user.is_authenticated:
+        return redirect('/')  # TODO: change '/' to tt_core:index
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            print(username)
+            print(password)
+            login(request, user)
+            return redirect('/')
+        else:
+            form = AuthenticationForm(request.POST)
+            error_message = 'Something went wrong registering the new user! Try again...'
+            print(form.errors)
+            return render(request, 'tt_core/register.html', {'form': form, 'error': error_message})
+    else:
+        form = UserCreationForm()
+        return render(request, 'tt_core/register.html', {'form': form})
+
+def signin(request):
+    if request.user.is_authenticated:
+        return index(request)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        print(username)
+        print(password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            form = AuthenticationForm(request.POST)
+            return render(request, 'tt_core/login.html', {'form': form})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'tt_core/login.html', {'form': form})
+
+def signout(request):
+    logout(request)
+    return redirect('/')
+
 
 def suggest_new_task(request):
     return HttpResponse('in suggest new task')

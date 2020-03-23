@@ -1,0 +1,12 @@
+<div class="row nav" style="margin-bottom: 5rem">
+    <div class="three columns"><a href="{% url 'tt_core:index' %}">Today's Challenge</a></div>
+    <div class="three columns"><a href="{% url 'tt_core:suggestions' %}">Suggested Challenges</a></div>
+    <div class="three columns"><a href="{% url 'tt_core:suggest_new_task' %}">Post New</a></div>
+    {% if user.is_authenticated %}
+        <div class="two columns"><a href="{% url 'tt_core:signout' %}">Log out</a></div>
+    {% else %}
+        <div class="one columns"><a href="{% url 'tt_core:login' %}">Log in</a></div>
+        <div class="one columns"><a href="{% url 'tt_core:register_new_user' %}">Register</a></div>
+    {% endif %}
+<!--    <div class="three columns"><a href="{% url 'tt_core:index' %}">Today's Challenge</a></div>-->
+</div>

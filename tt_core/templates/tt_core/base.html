@@ -15,12 +15,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="eleven columns" style="margin-top: 25%">
+        <div class="eleven columns" style="margin-top: 15rem">
             <h1>TweakToday</h1>
-            {% block content %}
-            {% endblock %}
         </div>
     </div>
+    {% include 'tt_core/nav.html' %}
+    {% block content %}
+    {% endblock %}
 </div>
 
 </body>
