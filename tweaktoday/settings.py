@@ -25,7 +25,7 @@ SECRET_KEY = 'z(8qpay$_ek*e0(pr9no^zp^m!@0s=xzh*#&-67b4@5)8i3&h#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tt.tom.coffee']
 
 
 # Application definition
