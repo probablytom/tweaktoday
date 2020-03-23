@@ -1,0 +1,58 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="nine columns">
+        <p>You can submit a new suggested challenge here.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="nine columns">
+        <p>The first section is where your challenge goes. This should be concise, and usually makes sense on its own. Something like <i>"Find some new music"</i> or <i>"Leave an anonymous love note in a public place"</i>.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="nine columns">
+        <p>The second, <i>optional</i> section is for any extra information which can help to explain your challenge and why you think it's interesting.</p>
+    </div>
+</div>
+
+{% if error %}
+<div class="row">
+    <div class="nine columns">
+        <strong>{{error}}</strong>
+    </div>
+</div>
+{% endif %}
+
+<form action="{% url 'tt_core:suggest_new_task'%}" method="post">
+
+    {% csrf_token %}
+    <div class="row">
+        <div class="three columns">
+            <label for="suggestion_text">Suggested challenge:</label>
+        </div>
+        <div class="nine columns">
+            <input type="text" id="suggestion_text" class="u-full-width" placeholder="Your good and cool suggestion…" name="suggestion_text">
+        </div>
+    </div>
+    <div class="row">
+<!--        <div class="three columns">-->
+            <label for="explainer_text">Additional explanatory detail:</label>
+<!--        </div>-->
+<!--        <div class="nine columns">-->
+        <textarea class="u-full-width" placeholder="Optional…" id="explainer_text" name="explainer_text"></textarea>
+<!--        </div>-->
+    </div>
+    <div class="row">
+        <div class="three columns">
+            <input type="submit" value="Submit">
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}

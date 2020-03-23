@@ -3,7 +3,13 @@
 {% block content %}
 <p>Welcome to TweakToday!</p>
 
-<p>Today's challenge: <i>{{ challenge.task_text }}</i>.</p>
+<div class="row embossed">
+    <div class="nine columns embossed">
+        <span class="embossed">
+        <p>Today's challenge: <i>{{ challenge.task_text }}</i>.</p>
+        </span>
+    </div>
+</div>
 
 {% if challenge.task_explainer != "" %}
 <p>Some extra information was submitted with this challenge: <i>{{ challenge.task_explainer }}</i></p>

@@ -2,12 +2,23 @@
 
 {% block content %}
 {% for suggestion in suggs %}
-    <div class="row" style="margin-bottom: 4rem">
-        <div class="nine columns">{{ suggestion.task_text }}</div>
+    <div class="row{% if forloop.counter == 1 %} embossed{% endif %}" style="margin-bottom: 4rem">
+        <div class="seven columns">{{ suggestion.task_text }}</div>
+        <div class="two columns"><p>{{ suggestion.votes }} votes</p></div>
         {% if user.is_authenticated %}
-        <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="get" class="upvote_button">
-            <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
-        </form>
+
+            {% if user in suggestion.task_voters.all %}
+                <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="remove_vote_button">
+                    {% csrf_token %}
+                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                </form>
+            {% else %}
+                <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="upvote_button">
+                    {% csrf_token %}
+                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                </form>
+            {% endif %}
+
         {% endif %}
 
 

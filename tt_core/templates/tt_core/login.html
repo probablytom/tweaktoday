@@ -6,6 +6,10 @@
 
 <p>Input your registered username and password below to log in.</p>
 
+{% if form.errors %}
+<strong>{{form.errors}}</strong>
+{% endif %}
+
 <form action="{% url 'tt_core:login' %}" method="post">
     {% csrf_token %}
     {{form}}

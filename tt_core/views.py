@@ -28,9 +28,12 @@ def voteon(request, suggestion_id):
     '''
     suggestion = TaskSuggestion.objects.get(pk=suggestion_id)
     # Get logged in user
+    user = request.user
+    suggestion.task_voters.add(user)
+    # suggestion.save()
     # Add user to suggestion many-to-many
     # Render an appropriate template and return it
-    return HttpResponse('voteon')
+    return redirect('tt_core:suggestions')
 
 def vote_recieved(request):
     '''
@@ -55,7 +58,10 @@ def remove_vote(request, suggestion_id):
     :param suggestion_id: the suggestion for which the vote is being removed
     :return: A rendered vote_removed template
     '''
-    return HttpResponse('remove vote')
+    suggestion = TaskSuggestion.objects.get(pk=suggestion_id)
+    user = request.user
+    suggestion.task_voters.remove(user)
+    return redirect('tt_core:suggestions')
 
 def suggestions(request):
     '''
@@ -63,7 +69,8 @@ def suggestions(request):
     :param request: The django http request
     :return: A rendered suggestions template
     '''
-    suggs = TaskSuggestion.objects.all()
+    suggs = list(TaskSuggestion.objects.all())
+    suggs = sorted(suggs, key=lambda s: -s.votes)
     return render(request, 'tt_core/suggestions.html', {'suggs': suggs})
 
 def post_submission(request):
@@ -120,6 +127,21 @@ def signout(request):
     logout(request)
     return redirect('/')
 
-
+@login_required
 def suggest_new_task(request):
-    return HttpResponse('in suggest new task')
+    if request.method == 'POST':
+        try:
+            # New submission given!
+            challenge_text = request.POST['suggestion_text']
+            challenge_explainer = request.POST['explainer_text']
+            if challenge_text == "":
+                return render(request, 'tt_core/new_suggestion.html', {'error': "You can't submit a challenge without a challenge title!"})
+            sug = TaskSuggestion(task_text=challenge_text,
+                                 task_explainer=challenge_explainer)
+            sug.save()
+            return redirect('tt_core:suggestions')
+        except Exception as e:
+            print(e)
+            return render(request, 'tt_core/new_suggestion.html', {'error': 'We encountered an error processing your suggestion! Could you try again?'})
+    else:
+        return render(request, 'tt_core/new_suggestion.html')

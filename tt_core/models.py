@@ -22,3 +22,10 @@ class Submission(models.Model):
     tweak_url = models.URLField(max_length=1000, default="", blank=True)
     submission_explainer = models.CharField(max_length=2000, default="")
     submitted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+
+class Comment(models.Model):
+    commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    sumbission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    comment_text = models.CharField(max_length=1000)
+    timestamp = models.DateTimeField()
