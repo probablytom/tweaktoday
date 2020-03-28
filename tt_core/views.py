@@ -1,10 +1,13 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from .forms import SubmissionForm, CommentForm
+from .scheduling import *
+import datetime
 
 
 # Create your views here.
@@ -14,9 +17,18 @@ def index(request):
     :param _request: The django http request
     :return: Rendered index template containing today's tweak and its submissions
     '''
-    challenge = Tweak.objects.all()[0]
-    submissions = list(challenge.submission_set.all().iterator())
-    return render(request, 'tt_core/index.html', context={'challenge': challenge, 'submissions':submissions})
+    try:
+        challenge = Mission.objects.order_by('-date_assigned')[0]
+    except Exception as e:
+        return render(request, 'tt_core/index.html', context={'challenge': None, 'submissions': None})
+
+    submissions = list() if challenge.submission_set.all().count() is 0 \
+                         else list(challenge.submission_set.all().iterator())
+
+    return render(request, 'tt_core/index.html', context={'challenge': challenge,
+                                                          'submissions':submissions,
+                                                          'submission_form': SubmissionForm()})
+
 
 @login_required
 def voteon(request, suggestion_id):
@@ -35,6 +47,7 @@ def voteon(request, suggestion_id):
     # Render an appropriate template and return it
     return redirect('tt_core:suggestions')
 
+
 def vote_recieved(request):
     '''
     Tells a user their vote was recieved.
@@ -43,6 +56,7 @@ def vote_recieved(request):
     '''
     return HttpResponse('vote recieved')
 
+
 def submission_recieved(request):
     '''
     Tells a user their submission was recieved.
@@ -50,6 +64,7 @@ def submission_recieved(request):
     :return: A rendered submission_recieved template
     '''
     return HttpResponse('submission recieved')
+
 
 def remove_vote(request, suggestion_id):
     '''
@@ -63,23 +78,80 @@ def remove_vote(request, suggestion_id):
     suggestion.task_voters.remove(user)
     return redirect('tt_core:suggestions')
 
-def suggestions(request):
+
+def suggestions(request, error="", submission_message=""):
     '''
     Lists all of the current suggestions
     :param request: The django http request
     :return: A rendered suggestions template
     '''
-    suggs = list(TaskSuggestion.objects.all())
-    suggs = sorted(suggs, key=lambda s: -s.votes)
-    return render(request, 'tt_core/suggestions.html', {'suggs': suggs})
+    def suggs():
+        suggs = list(TaskSuggestion.objects.all())
+        suggs = sorted(suggs, key=lambda s: -s.votes)
+        return suggs
+    if request.method == 'POST':
+        try:
+            # New submission given!
+            challenge_text = request.POST['suggestion_text']
+            challenge_explainer = request.POST['explainer_text']
+            if challenge_text == "":
+                return render(request, 'tt_core/suggestions.html', {'error': "You can't submit a challenge without a challenge title!",
+                                                                    'suggs': suggs()})
+            sug = TaskSuggestion(task_text=challenge_text,
+                                 task_explainer=challenge_explainer)
+            sug.save()
+            return render(request, 'tt_core/suggestions.html', {'suggs': suggs()})
+        except Exception as e:
+            print(e)
+            return render(request, 'tt_core/suggestions.html', {'error': 'We encountered an error processing your suggestion! Could you try again?',
+                                                                'suggs': suggs()})
+    else:
+        return render(request, 'tt_core/suggestions.html', {'suggs': suggs()})
 
-def post_submission(request):
+@login_required
+def suggest_new_task(request):
+    pass
+
+
+@login_required
+def post_submission(request, mission_id):
     '''
     Adds a new submission to the list
     :param request: The django http request
+    :param mission_id: The pk of the mission being submitted to
     :return: A redirect to submission_recieved
     '''
-    return HttpResponse('post_submission')
+    mission = Mission.objects.get(pk=mission_id)
+    try:
+        form = SubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            explaination = form.cleaned_data.get('explanatory_text')
+            url = form.cleaned_data.get('submission_url')
+            img = form.cleaned_data.get('submission_photo_or_video')
+            newsub = Submission(submission_explainer=explaination,
+                                tweak_url=url,
+                                extra_content=img,
+                                submitted_by=request.user,
+                                tweak_submitted_to=mission)
+            newsub.save()
+            return render(request, 'tt_core/index.html', {'challenge': mission,
+                                                          'submissions': mission.submission_set.all(),
+                                                          'submission_form': SubmissionForm(),
+                                                          'submission_message': 'Submission successfully posted!'})
+        else:
+            print('invalid!')
+            return render(request, 'tt_core/index.html', {'challenge': mission,
+                                                          'submissions': mission.submission_set.all(),
+                                                          'submission_form': SubmissionForm(),
+                                                          'submission_message': "Couldn't accept your submission! Maybe we found an invalid URL, or there was an issue with a photo."})
+        # if request.FILES['submission_photo_or_video']
+    except:
+        print('error')
+        return render(request, 'tt_core/index.html', {'challenge': mission,
+                                                      'submissions': mission.submission_set.all(),
+                                                      'submission_form': SubmissionForm(),
+                                                      'submission_message': 'Submission successfully posted!'})
+
 
 def register_user(request):
     if request.user.is_authenticated:
@@ -104,6 +176,7 @@ def register_user(request):
         form = UserCreationForm()
         return render(request, 'tt_core/register.html', {'form': form})
 
+
 def signin(request):
     if request.user.is_authenticated:
         return index(request)
@@ -123,25 +196,69 @@ def signin(request):
         form = AuthenticationForm()
         return render(request, 'tt_core/login.html', {'form': form})
 
+
 def signout(request):
     logout(request)
     return redirect('/')
 
+
 @login_required
-def suggest_new_task(request):
+def post_comment(request):
+    pass
+
+
+def view_past_mission(request, mission_id):
+    try:
+        mission = Mission.objects.get(pk=mission_id)
+        submissions = list() if mission.submission_set.all().count() is 0 \
+            else list(mission.submission_set.all().iterator())
+        return render(request, 'tt_core/mission.html', {'challenge': mission,
+                                                        'submissions': submissions})
+    except:
+        return render(request, 'tt_core/mission.html', {'challenge': None,
+                                                        'submissions': None})
+
+
+
+def view_archive(request):
+    missions = Mission.objects.filter(date_assigned__lt=datetime.date.today())
+    return render(request, 'tt_core/archive.html', {'past_missions': missions})
+
+def view_comments(request, submission_id):
     if request.method == 'POST':
-        try:
-            # New submission given!
-            challenge_text = request.POST['suggestion_text']
-            challenge_explainer = request.POST['explainer_text']
-            if challenge_text == "":
-                return render(request, 'tt_core/new_suggestion.html', {'error': "You can't submit a challenge without a challenge title!"})
-            sug = TaskSuggestion(task_text=challenge_text,
-                                 task_explainer=challenge_explainer)
-            sug.save()
-            return redirect('tt_core:suggestions')
-        except Exception as e:
-            print(e)
-            return render(request, 'tt_core/new_suggestion.html', {'error': 'We encountered an error processing your suggestion! Could you try again?'})
+        if not request.user.is_authenticated:
+            sub = Submission.objects.get(pk=submission_id)
+            comments = sub.comment_set.order_by('-timestamp')
+            return render(request, 'tt_core/view_comments.html', {'sub': sub,
+                                                                  'comments': comments,
+                                                                  'form': CommentForm(),
+                                                                  'error': 'You have to be logged in to leave comments!'})
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            sub = Submission.objects.get(pk=submission_id)
+            new_comment = Comment(comment_text=form.cleaned_data.get('comment_text'),
+                                  commenter=request.user,
+                                  submission=sub)
+            new_comment.save()
+            comments = sub.comment_set.order_by('-timestamp')
+            return render(request, 'tt_core/view_comments.html', {'sub': sub,
+                                                                  'comments': comments,
+                                                                  'form': CommentForm()})
+        else:
+            sub = Submission.objects.get(pk=submission_id)
+            comments = sub.comment_set.order_by('-timestamp')
+            return render(request, 'tt_core/view_comments.html', {'sub': sub,
+                                                                  'comments': comments,
+                                                                  'form': CommentForm(),
+                                                                  'error': 'There was an error with your form in adding your comment! Not sure what it could be. Sorry…'})
     else:
-        return render(request, 'tt_core/new_suggestion.html')
+        sub = Submission.objects.get(pk=submission_id)
+        comments = sub.comment_set.order_by('-timestamp')
+        return render(request, 'tt_core/view_comments.html', {'sub': sub,
+                                                              'comments': comments,
+                                                              'form': CommentForm()})
+
+def view_profile(request, username):
+    user = User.objects.get(username=username)
+    posts = {sub.tweak_submitted_to: sub for sub in Submission.objects.filter(submitted_by=user)}
+    return render(request, 'tt_core/profile.html', {'posts': posts})

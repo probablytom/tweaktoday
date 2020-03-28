@@ -1,0 +1,42 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+
+{% for mission, sub in posts.items %}
+
+{% if not forloop.first %}
+<hr>
+{% endif %}
+
+<div class="row">
+    <div class="nine columns">
+        <p>On {{mission.date_assigned}} the mission was: <i>{{mission.task_text}}</i>.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="eleven columns">{{ sub.submitted_by.username }}{% if sub.tweak_url %} submitted something <a href="{{ sub.tweak_url }}">here.</a>{% else %} made a submission.{% endif %}</div>
+    {% if sub.extra_content %}
+    {% if sub.is_video %}
+    <video controls>
+        <source src="{{ sub.extra_content.url }}" width="480" height="320" type="{{ sub.mime }}">
+    </video>
+    {% else %}
+    <img src="{{sub.extra_content.url}}"/>
+    {% endif %}
+    {% endif %}
+    <div class="two-thirds column"><p>They said: <i>{{ sub.submission_explainer }}</i></p></div>
+</div>
+<div class="row">
+    <div class="six columns">
+        <form action="{% url 'tt_core:view_comments' sub.pk %}">
+            <input type="submit" value="Comments"/>
+        </form>
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

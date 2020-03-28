@@ -1,0 +1,32 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+{% if past_missions %}
+<div class="row">
+    <div class="nine columns">
+        <p>Welcome to <i>The Archive</i>! Here's everything the community has done so far, by date.</p>
+    </div>
+</div>
+{% endif %}
+
+{% for mission in past_missions %}<!--__order_by__date_assigned %}-->
+<a href="{% url 'tt_core:view_mission' mission.pk %}">
+    <div class="row">
+        <div class="three columns">
+            {{ mission.date_assigned|date:"M d, Y" }}
+        </div>
+        <div class="six columns">
+            <i>{{ mission.task_text }}</i>
+        </div>
+    </div>
+</a>
+{% empty %}
+<div class="row">
+    <div class="nine columns">
+        <p>No past missions yet — come back tomorrow! (And then today's mission will be there) (that's how this site works) (it's only the first day)</p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

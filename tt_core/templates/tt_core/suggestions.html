@@ -1,6 +1,66 @@
 {% extends 'tt_core/base.html' %}
 
 {% block content %}
+
+{% if success_message %}
+<div class="row">
+    <div class="nine columns">
+        <p><i>{{ success_message }}</i></p>
+    </div>
+</div>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <button class="button toggle_submission_form_vis" id="show_button">Submit a suggested challenge</button>
+    <form action="{% url 'tt_core:suggestions'%}" method="post" id="new_suggestion_form">
+        {% csrf_token %}
+        {% if error or submission_message %}
+        <strong>{{ error }}</strong><br>
+        <strong>{{ submission_message }}</strong>
+        {% endif %}
+        <div class="row">
+            <div class="three columns">
+                <label for="suggestion_text">Suggested challenge:</label>
+            </div>
+            <div class="nine columns">
+                <input type="text" id="suggestion_text" class="u-full-width" placeholder="Your good and cool suggestion…" name="suggestion_text">
+            </div>
+        </div>
+        <div class="row">
+            <label for="explainer_text">Additional explanatory detail:</label>
+            <textarea class="u-full-width" placeholder="Optional…" id="explainer_text" name="explainer_text"></textarea>
+        </div>
+        <div class="row">
+            <div class="three columns">
+                <input type="submit" value="Suggest challenge">
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="three columns">
+            <button class="button toggle_submission_form_vis" id="hide_button">Hide challenge submission</button>
+        </div>
+    </div>
+    <script>
+        {% if error or submission_message %}
+        $("#show_button").hide()
+        {% else %}
+        $("#new_suggestion_form").hide();
+        $("#hide_button").hide();
+        {% endif %}
+        $(".toggle_submission_form_vis").click(function() {
+            $("#new_suggestion_form").toggle();
+            $(".toggle_submission_form_vis").toggle();
+        });
+    </script>
+{% else %}
+    <div class="row">
+        <div class="nine columns">
+            <p><i>You must be logged in to submit new challenges!</i></p>
+        </div>
+    </div>
+{% endif %}
+
 {% for suggestion in suggs %}
     <div class="row{% if forloop.counter == 1 %} embossed{% endif %}" style="margin-bottom: 4rem">
         <div class="seven columns">{{ suggestion.task_text }}</div>
@@ -27,4 +87,4 @@
 {% empty %}
 There are no suggested tweaks right now!
 {% endfor %}
-{% endblock%}
+{% endblock %}
