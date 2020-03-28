@@ -135,20 +135,21 @@ def post_submission(request, mission_id):
                                 tweak_submitted_to=mission)
             newsub.save()
             return render(request, 'tt_core/index.html', {'challenge': mission,
-                                                          'submissions': mission.submission_set.all(),
+                                                          'submissions': mission.submission_set.order_by('-submission_datetime'),
                                                           'submission_form': SubmissionForm(),
                                                           'submission_message': 'Submission successfully posted!'})
         else:
             print('invalid!')
             return render(request, 'tt_core/index.html', {'challenge': mission,
-                                                          'submissions': mission.submission_set.all(),
+                                                          'submissions': mission.submission_set.order_by('-submission_datetime'),
                                                           'submission_form': SubmissionForm(),
                                                           'submission_message': "Couldn't accept your submission! Maybe we found an invalid URL, or there was an issue with a photo."})
         # if request.FILES['submission_photo_or_video']
     except:
         print('error')
         return render(request, 'tt_core/index.html', {'challenge': mission,
-                                                      'submissions': mission.submission_set.all(),
+                                                      'submissions': mission.submission_set.order_by(
+                                                          '-submission_datetime'),
                                                       'submission_form': SubmissionForm(),
                                                       'submission_message': 'Submission successfully posted!'})
 
