@@ -1,5 +1,5 @@
 from . import views
-from django.urls import path
+from django.urls import path, re_path
 
 app_name = 'tt_core'
 
@@ -17,4 +17,5 @@ urlpatterns = [
     path('submit_mission/<int:mission_id>', views.post_submission, name='post_submission'),
     path('view_comments/<int:submission_id>', views.view_comments, name='view_comments'),
     path('profile/<str:username>', views.view_profile, name='profile'),
+    re_path('photos/.*', views.stream_video, name='stream_video')
 ]
