@@ -32,6 +32,9 @@
     {% endif %}
 </div>
 <div class="row">
+    <div class="two-thirds column"><p>They said: <i>{{ sub.submission_explainer }}</i></p></div>
+</div>
+<div class="row">
     <div class="six columns">
         <form action="{% url 'tt_core:view_comments' sub.pk %}">
             <input type="submit" value="Comments"/>
