@@ -92,7 +92,7 @@
     <div class="row">
         <div class="six columns">
             <form action="{% url 'tt_core:view_comments' sub.pk %}">
-                <input type="submit" value="Comments"/>
+                <input type="submit" value="{% if sub.comment_set.all|length is 0 %}Comment{% else %}View {{sub.comment_set.all|length}} Comments{% endif %}"/>
             </form>
         </div>
     </div>
