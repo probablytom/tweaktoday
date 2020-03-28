@@ -23,7 +23,7 @@ def index(request):
         return render(request, 'tt_core/index.html', context={'challenge': None, 'submissions': None})
 
     submissions = list() if challenge.submission_set.all().count() is 0 \
-                         else list(challenge.submission_set.all().iterator())
+                         else list(challenge.submission_set.order_by('-submission_datetime').iterator())
 
     return render(request, 'tt_core/index.html', context={'challenge': challenge,
                                                           'submissions':submissions,
@@ -210,7 +210,7 @@ def post_comment(request):
 def view_past_mission(request, mission_id):
     try:
         mission = Mission.objects.get(pk=mission_id)
-        submissions = list() if mission.submission_set.all().count() is 0 \
+        submissions = list() if mission.submission_set.order_by('-submission_datetime').count() is 0 \
             else list(mission.submission_set.all().iterator())
         return render(request, 'tt_core/mission.html', {'challenge': mission,
                                                         'submissions': submissions})
