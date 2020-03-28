@@ -79,10 +79,10 @@
         {% if sub.extra_content %}
         {% if sub.is_video %}
         <video controls>
-            <source src="{{ sub.extra_content.url }}" width="480" height="320" type="{{ sub.mime }}">
+            <source src="{{ sub.extra_content.url }}" width="320" height="320" type="{{ sub.mime }}">
         </video>
         {% else %}
-        <img src="{{sub.extra_content.url}}"/>
+        <img height="480" width="320" src="{{sub.extra_content.url}}"/>
         {% endif %}
         {% endif %}
     </div>
