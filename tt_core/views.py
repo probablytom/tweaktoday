@@ -327,5 +327,8 @@ def view_comments(request, submission_id):
 
 def view_profile(request, username):
     user = User.objects.get(username=username)
-    posts = {sub.tweak_submitted_to: sub for sub in Submission.objects.filter(submitted_by=user)}
+    posts = []
+    for submission in Submission.objects.filter(submitted_by=user).order_by('-submission_datetime'):
+        posts.append((submission.tweak_submitted_to, submission))
+    # posts = {subs.tweak_submitted_to: subs for subs in Submission.objects.filter(submitted_by=user)}
     return render(request, 'tt_core/profile.html', {'posts': posts})

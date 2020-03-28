@@ -3,7 +3,7 @@
 {% block content %}
 
 
-{% for mission, sub in posts.items %}
+{% for mission, sub in posts %}
 
 {% if not forloop.first %}
 <hr>
@@ -16,17 +16,20 @@
 </div>
 
 <div class="row">
-    <div class="eleven columns">{{ sub.submitted_by.username }}{% if sub.tweak_url %} submitted something <a href="{{ sub.tweak_url }}">here.</a>{% else %} made a submission.{% endif %}</div>
+    <div class="eleven columns"><a href="{% url 'tt_core:profile' sub.submitted_by.username %}">{{ sub.submitted_by.username }}</a>{% if sub.tweak_url %} submitted something <a href="{{ sub.tweak_url }}">here</a>.{% else %} made a submission.{% endif %}</div>
     {% if sub.extra_content %}
     {% if sub.is_video %}
-    <video controls playsinline>
-        <source src="{{ sub.extra_content.url }}" width="320" height="320" type="{{ sub.mime }}">
+    <video controls playsinline preload="metadata">
+        <source src="{{ sub.extra_content.url }}" width="320" height="240" type="{{ sub.mime }}"></source>
+        <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/mp4"></source>
+        <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/webm"></source>
+        <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/ogg"></source>
+        Sorry… it doesn't look like your browser can load this video type.
     </video>
     {% else %}
     <img src="{{sub.extra_content.url}}"/>
     {% endif %}
     {% endif %}
-    <div class="two-thirds column"><p>They said: <i>{{ sub.submission_explainer }}</i></p></div>
 </div>
 <div class="row">
     <div class="six columns">
@@ -35,7 +38,6 @@
         </form>
     </div>
 </div>
-
 {% endfor %}
 
 
