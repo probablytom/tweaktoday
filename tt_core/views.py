@@ -153,7 +153,7 @@ def suggestions(request, error="", submission_message=""):
     :return: A rendered suggestions template
     '''
     def suggs():
-        suggs = list(TaskSuggestion.objects.order_by('-votes'))
+        suggs = list(TaskSuggestion.objects.all())
         suggs = sorted(suggs, key=lambda s: -s.votes)
         return suggs
     if request.method == 'POST':
