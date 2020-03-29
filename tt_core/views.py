@@ -292,7 +292,7 @@ def view_comments(request, submission_id):
     if request.method == 'POST':
         if not request.user.is_authenticated:
             sub = Submission.objects.get(pk=submission_id)
-            comments = sub.comment_set.order_by('-timestamp')
+            comments = sub.comment_set.order_by('timestamp')
             return render(request, 'tt_core/view_comments.html', {'sub': sub,
                                                                   'comments': comments,
                                                                   'form': CommentForm(),
@@ -304,20 +304,20 @@ def view_comments(request, submission_id):
                                   commenter=request.user,
                                   submission=sub)
             new_comment.save()
-            comments = sub.comment_set.order_by('-timestamp')
+            comments = sub.comment_set.order_by('timestamp')
             return render(request, 'tt_core/view_comments.html', {'sub': sub,
                                                                   'comments': comments,
                                                                   'form': CommentForm()})
         else:
             sub = Submission.objects.get(pk=submission_id)
-            comments = sub.comment_set.order_by('-timestamp')
+            comments = sub.comment_set.order_by('timestamp')
             return render(request, 'tt_core/view_comments.html', {'sub': sub,
                                                                   'comments': comments,
                                                                   'form': CommentForm(),
                                                                   'error': 'There was an error with your form in adding your comment! Not sure what it could be. Sorry…'})
     else:
         sub = Submission.objects.get(pk=submission_id)
-        comments = sub.comment_set.order_by('-timestamp')
+        comments = sub.comment_set.order_by('timestamp')
         return render(request, 'tt_core/view_comments.html', {'sub': sub,
                                                               'comments': comments,
                                                               'form': CommentForm()})
