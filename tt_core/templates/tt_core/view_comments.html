@@ -1,5 +1,7 @@
 {% extends 'tt_core/base.html' %}
 
+{% load markdown_extras %}
+
 {% block content %}
 <div class="row">
     <div class="eleven columns"><a href="{% url 'tt_core:profile' sub.submitted_by.username %}">{{ sub.submitted_by.username }}</a>{% if sub.tweak_url %} submitted something <a href="{{ sub.tweak_url }}">here.</a>{% else %} made a submission.{% endif %}</div>
@@ -26,7 +28,7 @@
 </div>
 <div class="row">
     <div class="nine columns">
-        <p><i>{{comment.comment_text}}</i></p>
+        <p><i>{{comment.comment_text|markdown|safe}}</i></p>
     </div>
 </div>
 {% endfor %}

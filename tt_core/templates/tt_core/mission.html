@@ -1,4 +1,5 @@
 {% extends 'tt_core/base.html' %}
+{% load markdown_extras %}
 
 {% block content %}
 
@@ -91,7 +92,7 @@
         {% endif %}
     </div>
     <div class="row">
-        <div class="two-thirds column"><p>They said: <i>{{ sub.submission_explainer }}</i></p></div>
+        <div class="two-thirds column"><p>They said: {{ sub.submission_explainer | markdown | safe}}</p></div>
     </div>
     <div class="row">
         <div class="six columns">
