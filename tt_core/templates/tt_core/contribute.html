@@ -1,0 +1,91 @@
+{% extends 'tt_core/base.html' %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="nine columns">
+        <h3>Hi!</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="nine columns">
+        <p><i>Thank you so much for checking this project out.</i> It was genuinely a blast to make but it would be even better if people found it fun to use, too!</p>
+        <p>If you're wanting to contribute, that's incredible. Thanks again. This has been split into two sections: the first is how to contribute if you're not so tech-y, and the second is how to contribute if you can hack on a bit of code, too.</p>
+        <p>First, though, let's go over the known issues with the site.</p>
+    </div>
+</div>
+
+<h4>Known Issues</h4>
+
+<div class="row">
+    <div class="nine columns">
+        <ul>
+            <li>There is no code of conduct</li>
+            <li>There is no about page</li>
+            <li>Comments appear in the wrong choronological order</li>
+            <li>Photos uploaded from iPhones rotate incorrectly on desktops</li>
+            <li>View code needs to be cleaned up</li>
+            <li>Edit / delete functionality is missing</li>
+        </ul>
+    </div>
+</div>
+
+
+
+<h4>Non-techy contributions</h4>
+
+<div class="row">
+    <div class="nine columns">
+        <p><i>If you have any bugs or feature requests, let me (Tom) know (you can email tweaktoday -at- tomwallis -dot- net) and he'll add it to the list!</i></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="nine columns">
+        <ul>
+            <li>Add content to the site! Seriously. Good suggestions for challenges are the bread and butter of these sorts of things. Let's keep them coming!</li>
+            <li>Beginning writing a code of conduct. I'd love to be involved with this if I can.
+                I'd also love to take some direction over how this gets put together from <a href="https://runyourown.social/">the guide at runyourown.social.</a></li>
+            <li>An about page needs to be written. It doesn't have to be long, but right now I'm busy with the tech-y side of things. If you can make a start on this I'll be very very grateful!</li>
+            <li>Submit feature requests. This can probably get a lot better, and starting a discussion around things that you as a user want to see is the <i>only</i> way to actually make those improvements. If I don't know about them they can't be implemented. Feedback is a <i>really</i> valuable currency in this game.</li>
+        </ul>
+    </div>
+</div>
+
+<h4>Techy contributions</h4>
+
+<div class="row">
+    <div class="nine columns">
+        <p><i>Im so glad you want to contribute to the site! You can find the code <a
+                href="https://github.com/probablytom/tweaktoday">in its github repo</a>. The whole thing is django. CSS is a combination of skeleton.css and tufte.css.</i></p>
+    </div>
+</div>
+
+<div class="row">
+    <nine class="columns">
+        <ul>
+            <li>Fix the comment order!</li>
+            <li>If anybody can figure out how to fix mobile-captured photo rotation when displayed on desktop I'll be forever in your debt. They get spun 90º clockwise. Why?</li>
+            <li>See if you can implement content deletion! Definitely not too hard, if I get around to it I'll implement this, but if you can beat me to it please do!<br/>
+            If you <i>do</i> attack this, remember how files are managed. If somebody deletes their content the file should also be deleted from the server. Files are stored in the DB as paths to files on disk, so you need to delete that file, <i>then</i> the content.</li>
+            <li>Deleting content is one thing, editing is another. getting editing would be great.</li>
+            <li>Things that need editing / deleting capabilities:
+                <ul><li>Submissions</li>
+                <li>Suggested tasks</li>
+                <li>Comments</li>
+                <li>...anything else?</li>
+                </ul></li>
+        </ul>
+    </nine>
+</div>
+
+<div class="row">
+    <div class="three columns offset-by-nine">
+        <p><i>Thanks so much!</i></p>
+        <p><i>— Tom.</i></p>
+    </div>
+</div>
+
+{% endblock %}

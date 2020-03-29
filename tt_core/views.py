@@ -287,6 +287,9 @@ def view_past_mission(request, mission_id):
                                                         'submissions': None})
 
 
+def view_contribute_page(request):
+    return render(request, 'tt_core/contribute.html')
+
 
 def view_archive(request):
     missions = Mission.objects.filter(date_assigned__lt=datetime.date.today())
