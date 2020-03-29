@@ -9,6 +9,7 @@ class TaskSuggestion(models.Model):
     task_text = models.CharField(max_length=200)
     task_explainer = models.CharField(max_length=1000, blank=True)
     task_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    suggestion_time = models.DateTimeField(auto_now_add=True)
 
     @property
     def votes(self):

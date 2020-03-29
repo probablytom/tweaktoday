@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from .models import *
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -154,7 +155,7 @@ def suggestions(request, error="", submission_message=""):
     '''
     def suggs():
         suggs = list(TaskSuggestion.objects.all())
-        suggs = sorted(suggs, key=lambda s: -s.votes)
+        suggs = sorted(suggs, key=lambda s: (-s.votes, timezone.now()-s.suggestion_time))
         return suggs
     if request.method == 'POST':
         try:

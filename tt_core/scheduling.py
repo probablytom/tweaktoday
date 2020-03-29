@@ -1,5 +1,5 @@
 from .models import TaskSuggestion, Mission
-from django.db.models.functions import Trunc
+from django.utils import timezone
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events
 import datetime
@@ -13,7 +13,7 @@ scheduler.add_jobstore(DjangoJobStore(), 'default')
                          id='mission cycler', max_instances=1)
 def cycle_current_challenge():
     print("replacing now")
-    suggs = sorted(TaskSuggestion.objects.all(), key=lambda s: -s.votes)
+    suggs = sorted(TaskSuggestion.objects.all(), key=lambda s: (-s.votes, timezone.now()-s.suggestion_time))
     if len(suggs) is 0:
         raise Exception("No new suggestions to pick")
 
