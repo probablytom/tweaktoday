@@ -206,14 +206,12 @@ def post_submission(request, mission_id):
                                                           'submission_form': SubmissionForm(),
                                                           'submission_message': 'Submission successfully posted!'})
         else:
-            print('invalid!')
             return render(request, 'tt_core/index.html', {'challenge': mission,
                                                           'submissions': mission.submission_set.order_by('-submission_datetime'),
                                                           'submission_form': SubmissionForm(),
                                                           'submission_message': "Couldn't accept your submission! Maybe we found an invalid URL, or there was an issue with a photo."})
         # if request.FILES['submission_photo_or_video']
     except:
-        print('error')
         return render(request, 'tt_core/index.html', {'challenge': mission,
                                                       'submissions': mission.submission_set.order_by(
                                                           '-submission_datetime'),
@@ -231,14 +229,11 @@ def register_user(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
-            print(username)
-            print(password)
             login(request, user)
             return redirect('/')
         else:
             form = AuthenticationForm(request.POST)
             error_message = 'Something went wrong registering the new user! Try again...'
-            print(form.errors)
             return render(request, 'tt_core/register.html', {'form': form, 'error': error_message})
     else:
         form = UserCreationForm()
@@ -252,8 +247,6 @@ def signin(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        print(username)
-        print(password)
         if user is not None:
             login(request, user)
             return redirect('/')
