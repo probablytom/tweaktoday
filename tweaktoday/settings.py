@@ -25,7 +25,7 @@ SECRET_KEY = 'z(8qpay$_ek*e0(pr9no^zp^m!@0s=xzh*#&-67b4@5)8i3&h#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tt.tom.coffee', '127.0.0.1', '0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['tt.tom.coffee', '127.0.0.1', '0.0.0.0', 'localhost', 'tweak.today']
 
 # Application definition
 
