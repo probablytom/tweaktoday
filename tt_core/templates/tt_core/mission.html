@@ -84,10 +84,10 @@
         {% if sub.extra_content %}
         {% if sub.is_video %}
         <video controls playsinline preload="metadata">
-		<source src="{{ sub.extra_content.url }}" width="320" height="240" type="{{ sub.mime }}"></source>
-            <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/mp4"></source>
-            <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/webm"></source>
-            <source src="{{ sub.extra_content.url }}" width="320" height="240" type="video/ogg"></source>
+		<source src="{{ sub.extra_content.url }}" width="80%" type="{{ sub.mime }}"></source>
+            <source src="{{ sub.extra_content.url }}" width="80%" type="video/mp4"></source>
+            <source src="{{ sub.extra_content.url }}" width="80%" type="video/webm"></source>
+            <source src="{{ sub.extra_content.url }}" width="80%" type="video/ogg"></source>
 	    Sorry… it doesn't look like your browser can load this video type.
         </video>
         {% else %}

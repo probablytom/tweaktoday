@@ -52,7 +52,6 @@
 /* For devices larger than 400px */
 @media (min-width: 400px) {
   .container {
-    width: 85%;
     padding: 0; }
 }
 
@@ -454,7 +453,8 @@ hr {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
 img, video {
-  max-width: 75%;
+  /*max-width: 75%;*/
+  width: 80%;
 }
 
 
