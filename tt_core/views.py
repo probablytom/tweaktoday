@@ -76,6 +76,7 @@ def stream_video(request):
     return resp
  # === end from https://stackoverflow.com/questions/33208849/python-django-streaming-video-mp4-file-using-httpresponse#41289535
 
+
 # Create your views here.
 def index(request):
     '''
@@ -277,8 +278,8 @@ def post_comment(request):
 def view_past_mission(request, mission_id):
     try:
         mission = Mission.objects.get(pk=mission_id)
-        submissions = list() if mission.submission_set.order_by('-submission_datetime').count() is 0 \
-            else list(mission.submission_set.all().iterator())
+        submissions = list() if mission.submission_set.all().count() is 0 \
+            else list(mission.submission_set.order_by('-submission_datetime').iterator())
         return render(request, 'tt_core/mission.html', {'challenge': mission,
                                                         'submissions': submissions})
     except:

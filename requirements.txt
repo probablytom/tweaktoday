@@ -1,3 +1,4 @@
 django
 django-apscheduler
 pillow
+markdown
