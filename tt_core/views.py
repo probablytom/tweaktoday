@@ -110,6 +110,7 @@ def voteon(request, suggestion_id):
     # Get logged in user
     user = request.user
     suggestion.task_voters.add(user)
+    suggestion.last_vote = timezone.now()
     # suggestion.save()
     # Add user to suggestion many-to-many
     # Render an appropriate template and return it
@@ -286,7 +287,7 @@ def view_contribute_page(request):
 
 
 def view_archive(request):
-    missions = Mission.objects.filter(date_assigned__lt=datetime.date.today())
+    missions = Mission.objects.filter(date_assigned__lt=datetime.date.today()).order_by('-date_assigned')
     return render(request, 'tt_core/archive.html', {'past_missions': missions})
 
 def view_comments(request, submission_id):
