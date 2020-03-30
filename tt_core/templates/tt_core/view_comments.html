@@ -28,7 +28,7 @@
 </div>
 <div class="row">
     <div class="nine columns">
-        <p><i>{{comment.comment_text|markdown|safe}}</i></p>
+        {{comment.comment_text|markdown|safe}}
     </div>
 </div>
 {% endfor %}
