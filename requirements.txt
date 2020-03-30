@@ -1,4 +1,5 @@
 django
 django-apscheduler
+django-letsencrypt
 pillow
 markdown
