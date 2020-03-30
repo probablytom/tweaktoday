@@ -31,6 +31,13 @@
         {{comment.comment_text|markdown|safe}}
     </div>
 </div>
+{% if user.username == comment.commenter.username %}
+<div class="row">
+    <div class="three columns offset-by-six">
+        <form action="{% url 'tt_core:delete_comment' comment.pk %}"><input type="submit" value="Delete comment"></form>
+    </div>
+</div>
+{% endif %}
 {% endfor %}
 
 <form action="{% url 'tt_core:view_comments' sub.pk %}" method="POST">

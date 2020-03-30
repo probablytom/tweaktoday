@@ -48,6 +48,11 @@ class Submission(models.Model):
             pass
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        if self.extra_content:
+            self.extra_content.delete()
+        super().delete(*args, **kwargs)
+
 
 class Comment(models.Model):
     commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

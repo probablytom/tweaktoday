@@ -99,11 +99,16 @@
         <div class="two-thirds column"><p>They said: {{ sub.submission_explainer | markdown | safe}}</p></div>
     </div>
     <div class="row">
-        <div class="six columns">
+        <div class="three columns">
             <form action="{% url 'tt_core:view_comments' sub.pk %}">
                 <input type="submit" value="{% if sub.comment_set.all|length is 0 %}Comment{% else %}View {{sub.comment_set.all|length}} Comments{% endif %}"/>
             </form>
         </div>
+        {% if sub.submitted_by.username == user.username %}
+        <div class="three columns">
+            <form action="{% url 'tt_core:delete_submission' sub.pk %}"><input type="submit" value="Delete submission"></form>
+        </div>
+        {% endif %}
     </div>
     {% empty %}
     <div class="row">

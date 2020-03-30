@@ -18,4 +18,6 @@ urlpatterns = [
     path('profile/<str:username>', views.view_profile, name='profile'),
     re_path('photos/.*', views.stream_video, name='stream_video'),
     path('contribute', views.view_contribute_page, name='contribute'),
+    path('delete_submission/<int:submission_id>', views.delete_submission, name='delete_submission'),
+    path('delete_comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
 ]

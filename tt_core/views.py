@@ -330,3 +330,20 @@ def view_profile(request, username):
         posts.append((submission.tweak_submitted_to, submission))
     # posts = {subs.tweak_submitted_to: subs for subs in Submission.objects.filter(submitted_by=user)}
     return render(request, 'tt_core/profile.html', {'posts': posts})
+
+@login_required
+def delete_submission(request, submission_id):
+    sub = Submission.objects.get(pk=submission_id)
+    if request.user.username == sub.submitted_by.username:
+        print('deleting')
+        sub.delete()
+    return redirect('tt_core:view_mission', sub.tweak_submitted_to.pk)
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    if request.user.username == comment.commenter.username:
+        print("deleting")
+        comment.delete()
+    return redirect('tt_core:view_comments', comment.submission.pk)
+
