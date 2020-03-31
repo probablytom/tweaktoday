@@ -50,10 +50,10 @@
   box-sizing: border-box; }
 
 /* For devices larger than 400px */
-@media (min-width: 400px) {
-  .container {
-    padding: 0; }
-}
+/*@media (min-width: 400px) {*/
+/*  .container {*/
+/*    padding: 0; }*/
+/*}*/
 
 /* For devices larger than 550px */
 @media (min-width: 550px) {
@@ -291,12 +291,21 @@ input[type="url"],
 input[type="password"],
 textarea,
 select {
-  height: 38px;
-  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
-  background-color: #fff;
-  border: 1px solid #D1D1D1;
+  display: inline-block;
+  padding: 0.15rem 0.1rem;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5rem;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
   border-radius: 4px;
-  box-shadow: none;
+  border: 1px solid #bbb;
+  cursor: pointer;
   box-sizing: border-box; }
 /* Removes awkward default styles on some inputs for iOS */
 input[type="email"],
