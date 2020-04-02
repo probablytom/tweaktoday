@@ -134,6 +134,9 @@ body {
   color: #111;
   background-color: #fffff8;
   }
+div {
+  padding: 2px;
+}
 
 
 /* Typography
@@ -186,6 +189,8 @@ p {
 
 .embossed {
   background-color: #ebebe5;
+  border-radius: 4px;
+  padding: 5px;
 }
 
 /* Links
@@ -283,17 +288,23 @@ input[type="button"].button-primary:focus {
 /* Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 textarea,
-input[type="url"] {
-  background-color: transparent;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-}
 input[type="email"],
 input[type="number"],
 input[type="search"],
 input[type="text"],
 input[type="tel"],
 input[type="password"],
+input[type="url"] {
+  background-color: transparent;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+/*input[type="email"],*/
+/*input[type="number"],*/
+/*input[type="search"],*/
+/*!*input[type="text"],*!*/
+/*input[type="tel"],*/
+/*input[type="password"],*/
 select {
   display: inline-block;
   padding: 0.15rem 0.1rem;
