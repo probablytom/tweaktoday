@@ -75,10 +75,7 @@
     {% if not forloop.first %}
     <hr>
     {% endif %}
-    {% if suggestion is next_up %}
-    <div class="embossed">
-    {% endif %}
-        <div class="row"><!--style="margin-bottom: 4rem">-->
+        <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="seven columns">{{ suggestion.task_text }}</div>
             <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
             {% if user.is_authenticated %}
@@ -105,9 +102,6 @@
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
-    {% if suggestion is next_up %}
-    </div>
-    {% endif %}
     {% empty %}
     There are no suggested tasks outside of the backburner!
     {% endfor %}
@@ -118,10 +112,7 @@
     {% if not forloop.first %}
     <hr>
     {% endif %}
-    {% if suggestion is next_up %}
-    <div class="embossed">
-        {% endif %}
-        <div class="row"><!--style="margin-bottom: 4rem">-->
+        <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="seven columns">{{ suggestion.task_text }}</div>
             <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
             {% if user.is_authenticated %}
@@ -148,9 +139,6 @@
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
-        {% if suggestion is next_up %}
-    </div>
-    {% endif %}
     {% empty %}
     There are no suggested tasks outside of the backburner!
     {% endfor %}
@@ -161,10 +149,7 @@
     {% if not forloop.first %}
     <hr>
     {% endif %}
-    {% if suggestion is next_up %}
-    <div class="embossed">
-    {% endif %}
-        <div class="row"><!--style="margin-bottom: 4rem">-->
+        <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="seven columns">{{ suggestion.task_text }}</div>
             <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
             {% if user.is_authenticated %}
@@ -191,9 +176,6 @@
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
-    {% if suggestion is next_up %}
-    </div>
-    {% endif %}
     {% empty %}
     There are no suggested tasks in the backburner!
     {% endfor %}

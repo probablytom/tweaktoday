@@ -12,7 +12,8 @@ def backburner_timeout():
 
 def get_upcoming_task():
     suggs = TaskSuggestion.objects.filter(last_vote__gte=backburner_timeout())
-    suggs = sorted(suggs, key=lambda s: (-s.votes, timezone.now() - s.suggestion_time))
+    suggs = sorted(suggs, key=lambda s: -s.votes)
+    print(suggs[0].pk)
     return suggs[0]
 
 @scheduler.scheduled_job("interval",
