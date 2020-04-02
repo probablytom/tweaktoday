@@ -75,7 +75,7 @@
     {% if not forloop.first %}
     <hr>
     {% endif %}
-    {% if forloop.first %}
+    {% if suggestion is next_up %}
     <div class="embossed">
         {% endif %}
         <div class="row"><!--style="margin-bottom: 4rem">-->
@@ -118,7 +118,7 @@
     {% if not forloop.first %}
     <hr>
     {% endif %}
-    {% if forloop.first %}
+    {% if suggestion is next_up %}
     <div class="embossed">
         {% endif %}
         <div class="row"><!--style="margin-bottom: 4rem">-->

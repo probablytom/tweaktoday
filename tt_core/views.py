@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import SubmissionForm, CommentForm
-from .scheduling import *
+from .scheduling import get_upcoming_task, backburner_timeout
 import datetime
 
 # === from https://stackoverflow.com/questions/33208849/python-django-streaming-video-mp4-file-using-httpresponse#41289535
@@ -154,10 +154,9 @@ def suggestions(request, error="", submission_message=""):
     :param request: The django http request
     :return: A rendered suggestions template
     '''
-    backburner_timeout = datetime.datetime.now() - timezone.timedelta(days=10)
     suggs = TaskSuggestion.objects.all()
-    recent_suggs = suggs.filter(last_vote__gte=backburner_timeout)
-    backburner = suggs.filter(last_vote__lt=backburner_timeout).order_by('-last_vote')
+    recent_suggs = suggs.filter(last_vote__gte=backburner_timeout())
+    backburner = suggs.filter(last_vote__lt=backburner_timeout()).order_by('-last_vote')
 
     def vote_sorted_suggs():
         # suggs_by_vote = TaskSuggestion.objects.filter('last_vote__gte'=two_weeks_ago)
@@ -173,23 +172,27 @@ def suggestions(request, error="", submission_message=""):
                 return render(request, 'tt_core/suggestions.html', {'error': "You can't submit a challenge without a challenge title!",
                                                                     'time_suggs': time_sorted_suggs(),
                                                                     'vote_suggs': vote_sorted_suggs(),
-                                                                    'backburner': backburner})
+                                                                    'backburner': backburner,
+                                                                    'next_up': get_upcoming_task()})
             sug = TaskSuggestion(task_text=challenge_text,
                                  task_explainer=challenge_explainer)
             sug.save()
             return render(request, 'tt_core/suggestions.html', {'time_suggs': time_sorted_suggs(),
                                                                 'vote_suggs': vote_sorted_suggs(),
-                                                                'backburner': backburner})
+                                                                'backburner': backburner,
+                                                                'next_up': get_upcoming_task()})
         except Exception as e:
             print(e)
             return render(request, 'tt_core/suggestions.html', {'error': 'We encountered an error processing your suggestion! Could you try again?',
                                                                 'time_suggs': time_sorted_suggs(),
                                                                 'vote_suggs': vote_sorted_suggs(),
-                                                                'backburner': backburner})
+                                                                'backburner': backburner,
+                                                                'next_up': get_upcoming_task()})
     else:
         return render(request, 'tt_core/suggestions.html', {'time_suggs': time_sorted_suggs(),
                                                             'vote_suggs': vote_sorted_suggs(),
-                                                            'backburner': backburner})
+                                                            'backburner': backburner,
+                                                            'next_up': get_upcoming_task()})
 
 
 @login_required
@@ -291,10 +294,12 @@ def view_past_mission(request, mission_id):
         submissions = list() if mission.submission_set.all().count() is 0 \
             else list(mission.submission_set.order_by('-submission_datetime').iterator())
         return render(request, 'tt_core/mission.html', {'challenge': mission,
-                                                        'submissions': submissions})
+                                                        'submissions': submissions,
+                                                        'submission_form': SubmissionForm()})
     except:
         return render(request, 'tt_core/mission.html', {'challenge': None,
-                                                        'submissions': None})
+                                                        'submissions': None,
+                                                        'submission_form': SubmissionForm()})
 
 
 def view_contribute_page(request):
