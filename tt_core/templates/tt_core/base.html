@@ -30,7 +30,7 @@
     <div class="embossed">
         <div class="row">
             <div class="nine columns">
-                <i>{% motd %}</i>
+                <i>{{ motd|markdown|safe }}</i>
             </div>
         </div>
     </div>
