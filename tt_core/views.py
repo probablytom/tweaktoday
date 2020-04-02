@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import SubmissionForm, CommentForm
 from .scheduling import get_upcoming_task, backburner_timeout
+from copy import copy
 import datetime
 
 # === from https://stackoverflow.com/questions/33208849/python-django-streaming-video-mp4-file-using-httpresponse#41289535
@@ -160,9 +161,11 @@ def suggestions(request, error="", submission_message=""):
 
     def vote_sorted_suggs():
         # suggs_by_vote = TaskSuggestion.objects.filter('last_vote__gte'=two_weeks_ago)
-        return sorted(list(suggs), key=lambda s: (-s.votes, timezone.now()-s.suggestion_time))
+        print(list(map(lambda s: s.votes, sorted(list(copy(recent_suggs)), key=lambda s: (-s.votes, s.suggestion_time-timezone.now())))))
+        return sorted(list(copy(recent_suggs)), key=lambda s: -s.votes)
+
     def time_sorted_suggs():
-        return suggs.order_by('-suggestion_time')
+        return recent_suggs.order_by('-suggestion_time')
     if request.method == 'POST':
         try:
             # New submission given!
