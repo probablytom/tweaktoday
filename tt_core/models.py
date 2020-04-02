@@ -1,6 +1,7 @@
 from django.db import models
 from mimetypes import guess_type
 from django.conf import settings
+from django.utils import timezone
 import datetime
 
 
@@ -10,10 +11,17 @@ class TaskSuggestion(models.Model):
     task_explainer = models.CharField(max_length=1000, blank=True)
     task_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     suggestion_time = models.DateTimeField(auto_now_add=True)
+    last_vote = models.DateTimeField(auto_now_add=True)
 
     @property
     def votes(self):
         return len(list(self.task_voters.all()))
+
+    @property
+    def on_backburner(self):
+        backburner_timelimit = datetime.timedelta(days=14)
+        time_since_last_vote = timezone.now() - self.last_vote
+        return time_since_last_vote > backburner_timelimit
 
 
 class Mission(models.Model):

@@ -25,6 +25,17 @@
         </div>
     </div>
     {% include 'tt_core/nav.html' %}
+    {% load markdown_extras %}
+    {% block curr_message %}
+    <div class="embossed">
+        <div class="row">
+            <div class="nine columns">
+                <i>{% motd %}</i>
+            </div>
+        </div>
+    </div>
+    <br/>
+    {% endblock %}
     {% block content %}
     {% endblock %}
 </div>

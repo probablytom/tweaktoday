@@ -10,95 +10,207 @@
 </div>
 {% endif %}
 
+
+<div class="row">
+    <div class="nine columns">
 {% if user.is_authenticated %}
-    <button class="button toggle_submission_form_vis" id="show_button">Submit a suggested challenge</button>
-    <form action="{% url 'tt_core:suggestions'%}" method="post" id="new_suggestion_form">
-        {% csrf_token %}
-        {% if error or submission_message %}
-        <strong>{{ error }}</strong><br>
-        <strong>{{ submission_message }}</strong>
-        {% endif %}
+        <button class="button toggle_submission_form_vis" id="show_button">Submit a suggested challenge</button>
+        <form action="{% url 'tt_core:suggestions'%}" method="post" id="new_suggestion_form">
+            {% csrf_token %}
+            {% if error or submission_message %}
+            <strong>{{ error }}</strong><br>
+            <strong>{{ submission_message }}</strong>
+            {% endif %}
+            <div class="row">
+                <div class="three columns">
+                    <label for="suggestion_text">Suggested challenge:</label>
+                </div>
+                <div class="nine columns">
+                    <input type="text" id="suggestion_text" class="u-full-width" placeholder="Your good and cool suggestion…" name="suggestion_text">
+                </div>
+            </div>
+            <div class="row">
+                <label for="explainer_text">Additional explanatory detail:</label>
+                <textarea class="u-full-width" placeholder="Optional…" id="explainer_text" name="explainer_text"></textarea>
+            </div>
+            <div class="row">
+                <div class="three columns">
+                    <input type="submit" value="Suggest challenge">
+                </div>
+            </div>
+        </form>
         <div class="row">
             <div class="three columns">
-                <label for="suggestion_text">Suggested challenge:</label>
-            </div>
-            <div class="nine columns">
-                <input type="text" id="suggestion_text" class="u-full-width" placeholder="Your good and cool suggestion…" name="suggestion_text">
+                <button class="button toggle_submission_form_vis" id="hide_button">Hide challenge submission</button>
             </div>
         </div>
-        <div class="row">
-            <label for="explainer_text">Additional explanatory detail:</label>
-            <textarea class="u-full-width" placeholder="Optional…" id="explainer_text" name="explainer_text"></textarea>
-        </div>
-        <div class="row">
-            <div class="three columns">
-                <input type="submit" value="Suggest challenge">
-            </div>
-        </div>
-    </form>
-    <div class="row">
-        <div class="three columns">
-            <button class="button toggle_submission_form_vis" id="hide_button">Hide challenge submission</button>
-        </div>
-    </div>
-    <script>
-        {% if error or submission_message %}
-        $("#show_button").hide()
-        {% else %}
-        $("#new_suggestion_form").hide();
-        $("#hide_button").hide();
-        {% endif %}
-        $(".toggle_submission_form_vis").click(function() {
-            $("#new_suggestion_form").toggle();
-            $(".toggle_submission_form_vis").toggle();
-        });
-    </script>
+        <script>
+            {% if error or submission_message %}
+            $("#show_button").hide()
+            {% else %}
+            $("#new_suggestion_form").hide();
+            $("#hide_button").hide();
+            {% endif %}
+            $(".toggle_submission_form_vis").click(function() {
+                $("#new_suggestion_form").toggle();
+                $(".toggle_submission_form_vis").toggle();
+            });
+        </script>
 {% else %}
-    <div class="row">
-        <div class="nine columns">
             <p><i>You must be logged in to submit new challenges!</i></p>
-        </div>
-    </div>
 {% endif %}
 
-{% for suggestion in suggs %}
+        </div>
+        <div class="three columns">
+            <select class="sorting-options" data-target=".suggestions-container">
+                <option data-show=".vote-sort">Sorted by vote count</option>
+                <option data-show=".new-sort">Sorted by newness</option>
+                <option data-show=".backburner">Backburner</option>
+            </select>
+        </div>
+    </div>
+<div class="suggestions-container">
+<div class="vote-sort">
+    {% for suggestion in vote_suggs %}
     {% if not forloop.first %}
     <hr>
     {% endif %}
-{% if forloop.first %}
-<div class="embossed">
-{% endif %}
-    <div class="row"><!--style="margin-bottom: 4rem">-->
-        <div class="seven columns">{{ suggestion.task_text }}</div>
-        <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
-        {% if user.is_authenticated %}
-
-                <div class="two columns offset-by-one">
-                    {% if user in suggestion.task_voters.all %}
-                    <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
-                        {% csrf_token %}
-                        <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
-                    </form>
-                    {% else %}
-                    <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
-                        {% csrf_token %}
-                        <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
-                    </form>
-                    {% endif %}
-                </div>
-
+    {% if forloop.first %}
+    <div class="embossed">
         {% endif %}
-    </div>
+        <div class="row"><!--style="margin-bottom: 4rem">-->
+            <div class="seven columns">{{ suggestion.task_text }}</div>
+            <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
+            {% if user.is_authenticated %}
 
-    {% if suggestion.task_explainer %}
-    <div class="row">
-        <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
+            <div class="two columns offset-by-one">
+                {% if user in suggestion.task_voters.all %}
+                <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% else %}
+                <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% endif %}
+            </div>
+
+            {% endif %}
+        </div>
+
+        {% if suggestion.task_explainer %}
+        <div class="row">
+            <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
+        </div>
+        {% endif %}
+        {% if forloop.first %}
     </div>
     {% endif %}
-{% if forloop.first %}
+    {% empty %}
+    There are no suggested tasks outside of the backburner!
+    {% endfor %}
 </div>
-{% endif %}
-{% empty %}
-There are no suggested tweaks right now!
-{% endfor %}
+
+<div class="new-sort">
+    {% for suggestion in time_suggs %}
+    {% if not forloop.first %}
+    <hr>
+    {% endif %}
+    {% if forloop.first %}
+    <div class="embossed">
+        {% endif %}
+        <div class="row"><!--style="margin-bottom: 4rem">-->
+            <div class="seven columns">{{ suggestion.task_text }}</div>
+            <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
+            {% if user.is_authenticated %}
+
+            <div class="two columns offset-by-one">
+                {% if user in suggestion.task_voters.all %}
+                <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% else %}
+                <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% endif %}
+            </div>
+
+            {% endif %}
+        </div>
+
+        {% if suggestion.task_explainer %}
+        <div class="row">
+            <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
+        </div>
+        {% endif %}
+        {% if forloop.first %}
+    </div>
+    {% endif %}
+    {% empty %}
+    There are no suggested tasks outside of the backburner!
+    {% endfor %}
+</div>
+
+<div class="backburner">
+    {% for suggestion in backburner %}
+    {% if not forloop.first %}
+    <hr>
+    {% endif %}
+    {% if forloop.first %}
+    <div class="embossed">
+        {% endif %}
+        <div class="row"><!--style="margin-bottom: 4rem">-->
+            <div class="seven columns">{{ suggestion.task_text }}</div>
+            <div class="two columns"><p class="voting">{{ suggestion.votes }} votes</p></div>
+            {% if user.is_authenticated %}
+
+            <div class="two columns offset-by-one">
+                {% if user in suggestion.task_voters.all %}
+                <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% else %}
+                <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
+                    {% csrf_token %}
+                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                </form>
+                {% endif %}
+            </div>
+
+            {% endif %}
+        </div>
+
+        {% if suggestion.task_explainer %}
+        <div class="row">
+            <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
+        </div>
+        {% endif %}
+        {% if forloop.first %}
+    </div>
+    {% endif %}
+    {% empty %}
+    There are no suggested tasks in the backburner!
+    {% endfor %}
+</div>
+
+</div>
+
+<script>
+$(document).on('change', '.sorting-options', function() {
+  var target = $(this).data('target');
+  var show = $("option:selected", this).data('show');
+  $(target).children().addClass('hide');
+  $(show).removeClass('hide');
+});
+$(document).ready(function(){
+	$('.sorting-options').trigger('change');
+});
+</script>
+
 {% endblock %}

@@ -154,10 +154,16 @@ def suggestions(request, error="", submission_message=""):
     :param request: The django http request
     :return: A rendered suggestions template
     '''
-    def suggs():
-        suggs = list(TaskSuggestion.objects.all())
-        suggs = sorted(suggs, key=lambda s: (-s.votes, timezone.now()-s.suggestion_time))
-        return suggs
+    backburner_timeout = datetime.datetime.now() - timezone.timedelta(days=10)
+    suggs = TaskSuggestion.objects.all()
+    recent_suggs = suggs.filter(last_vote__gte=backburner_timeout)
+    backburner = suggs.filter(last_vote__lt=backburner_timeout).order_by('-last_vote')
+
+    def vote_sorted_suggs():
+        # suggs_by_vote = TaskSuggestion.objects.filter('last_vote__gte'=two_weeks_ago)
+        return sorted(list(suggs), key=lambda s: (-s.votes, timezone.now()-s.suggestion_time))
+    def time_sorted_suggs():
+        return suggs.order_by('-suggestion_time')
     if request.method == 'POST':
         try:
             # New submission given!
@@ -165,17 +171,26 @@ def suggestions(request, error="", submission_message=""):
             challenge_explainer = request.POST['explainer_text']
             if challenge_text == "":
                 return render(request, 'tt_core/suggestions.html', {'error': "You can't submit a challenge without a challenge title!",
-                                                                    'suggs': suggs()})
+                                                                    'time_suggs': time_sorted_suggs(),
+                                                                    'vote_suggs': vote_sorted_suggs(),
+                                                                    'backburner': backburner})
             sug = TaskSuggestion(task_text=challenge_text,
                                  task_explainer=challenge_explainer)
             sug.save()
-            return render(request, 'tt_core/suggestions.html', {'suggs': suggs()})
+            return render(request, 'tt_core/suggestions.html', {'time_suggs': time_sorted_suggs(),
+                                                                'vote_suggs': vote_sorted_suggs(),
+                                                                'backburner': backburner})
         except Exception as e:
             print(e)
             return render(request, 'tt_core/suggestions.html', {'error': 'We encountered an error processing your suggestion! Could you try again?',
-                                                                'suggs': suggs()})
+                                                                'time_suggs': time_sorted_suggs(),
+                                                                'vote_suggs': vote_sorted_suggs(),
+                                                                'backburner': backburner})
     else:
-        return render(request, 'tt_core/suggestions.html', {'suggs': suggs()})
+        return render(request, 'tt_core/suggestions.html', {'time_suggs': time_sorted_suggs(),
+                                                            'vote_suggs': vote_sorted_suggs(),
+                                                            'backburner': backburner})
+
 
 @login_required
 def suggest_new_task(request):

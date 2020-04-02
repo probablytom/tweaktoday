@@ -439,7 +439,9 @@ form {
   float: right; }
 .u-pull-left {
   float: left; }
-
+.hide {
+  display: none;
+}
 
 /* Misc
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
