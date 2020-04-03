@@ -84,12 +84,12 @@
                 {% if user in suggestion.task_voters.all %}
                 <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% else %}
                 <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% endif %}
             </div>
@@ -121,12 +121,12 @@
                 {% if user in suggestion.task_voters.all %}
                 <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% else %}
                 <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% endif %}
             </div>
@@ -158,12 +158,12 @@
                 {% if user in suggestion.task_voters.all %}
                 <form action="{% url 'tt_core:remove_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="remove vote" name="Submit" id="remove_vote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% else %}
                 <form action="{% url 'tt_core:submit_vote' suggestion.pk %}" method="post" class="voting">
                     {% csrf_token %}
-                    <input type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
+                    <input style="margin-bottom: 0px" type="submit" value="upvote" name="Submit" id="upvote_suggestion_{{suggestion.pk}}"/>
                 </form>
                 {% endif %}
             </div>
