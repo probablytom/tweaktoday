@@ -17,13 +17,13 @@
 <div class="embossed" style="margin-bottom: 2rem">
     <div class="row">
         <div class="nine columns">
-            <p>Today's challenge: <i>{{ challenge.task_text }}</i>.</p>
+            Today's challenge: <i>{{ challenge.task_text }}</i>.
         </div>
     </div>
     {% if challenge.task_explainer != "" %}
     <div class="row">
         <div class="nine columns">
-            <p><i>{{ challenge.task_explainer }}</i></p>
+            <i>{{ challenge.task_explainer }}</i>
         </div>
     </div>
     {% endif %}

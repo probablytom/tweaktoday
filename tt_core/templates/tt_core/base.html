@@ -27,14 +27,11 @@
     {% include 'tt_core/nav.html' %}
     {% load markdown_extras %}
     {% block curr_message %}
-    <div class="embossed">
-        <div class="row">
+        <div class="row embossed" style="margin-bottom: 1rem">
             <div class="nine columns">
                 <i>{{ motd|markdown|safe }}</i>
             </div>
         </div>
-    </div>
-    <br/>
     {% endblock %}
     {% block content %}
     {% endblock %}
