@@ -98,7 +98,7 @@
         </div>
 
         {% if suggestion.task_explainer %}
-        <div class="row">
+    <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
@@ -135,7 +135,7 @@
         </div>
 
         {% if suggestion.task_explainer %}
-        <div class="row">
+    <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
@@ -172,7 +172,7 @@
         </div>
 
         {% if suggestion.task_explainer %}
-        <div class="row">
+    <div class="row {% if suggestion.pk == next_up.pk %}embossed{% endif %}"><!--style="margin-bottom: 4rem">-->
             <div class="nine columns"><i>{{ suggestion.task_explainer }}</i></div>
         </div>
         {% endif %}
